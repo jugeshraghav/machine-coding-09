@@ -8,7 +8,7 @@ const initial_state = {
   watchLater: JSON.parse(localStorage.getItem("allWatchLater")) || [],
 
   //Playlists
-  myPlaylistDetails: { name: "", description: "" },
+  myPlaylistDetails: { name: "", description: "", videos: [] },
 
   //States
   searchText: "",
@@ -44,8 +44,14 @@ const videoReducer = (state, action) => {
       return { ...state, noteTextArr: payLoad };
     case "ADD_NOTES_ARR_TO_VIDEOS":
       return { ...state, videos: payLoad };
+
+    //playlist
+    case "CREATE_PLAYLIST":
     default:
-      return { ...state };
+      return {
+        ...state,
+        playlist: [...state?.playlist, state?.myPlaylistDetails],
+      };
   }
 };
 

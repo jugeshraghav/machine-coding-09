@@ -5,7 +5,7 @@ export const SuggesstionVideoCard = ({ videoData }) => {
   return (
     <>
       <div
-        className="w-96 h-24 flex gap-2"
+        className="md:w-96 sm:w-80 h-24 flex gap-2"
         onClick={() => navigate(`/video/${videoData?._id}`)}
       >
         <div className="relative w-48 h-24">

@@ -6,7 +6,7 @@ import { Button, Modal } from "@mui/material";
 import { useData } from "../contexts/DataContext";
 import { useParams } from "react-router-dom";
 
-export const NoteModal = ({ from }) => {
+export const NoteModal = ({ from, noteId, show, handleOpen, handleClose }) => {
   const { videoId } = useParams();
   const {
     state,
@@ -15,17 +15,11 @@ export const NoteModal = ({ from }) => {
     dispatch,
   } = useData();
   console.log(from);
-  const [showPlaylistModal, setShowPlaylistModal] = useState(false);
 
   localStorage.setItem("notesArr", JSON.stringify(state?.noteTextArr));
 
-  const handleOpen = () => {
-    setShowPlaylistModal(true);
-  };
-  const handleClose = () => {
-    setShowPlaylistModal(false);
-  };
-
+  const currentVideo = state?.videos?.find(({ _id }) => _id == videoId);
+  const notesArr = currentVideo?.notes;
   //handlers
   const noteInputHandler = (e) => {
     dispatch({ type: "SET_NOTE_TEXT", payLoad: e.target.value });
@@ -39,16 +33,18 @@ export const NoteModal = ({ from }) => {
     handleClose();
   };
 
-  const editNoteHandler = () => {};
+  const editNoteHandler = () => {
+    const updatedNotesArr = notesArr?.map((note) =>
+      note?.id === noteId ? { ...note, note: noteText } : note
+    );
+    dispatch({ type: "SET_NOTES_ARR", payLoad: updatedNotesArr });
+    dispatch({ type: "CLEAR_NOTE_TEXT" });
+    handleClose();
+  };
   return (
     <>
-      <AiFillEdit
-        onClick={() => handleOpen()}
-        className="text-lg cursor-pointer"
-      />
-
       <Modal
-        open={showPlaylistModal}
+        open={show}
         onClose={handleClose}
         sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       >
@@ -56,7 +52,9 @@ export const NoteModal = ({ from }) => {
           className="bg-white rounded-lg flex flex-col gap-4 justify-between w-64 h-64 p-4"
           onClick={(e) => e.stopPropagation()}
         >
-          <h1 className="font-bold text-lg text-center">Add Notes</h1>
+          <h1 className="font-bold text-lg text-center">
+            {from === "edit" ? "Edit" : "Add"} Notes
+          </h1>
 
           <textarea
             value={noteText}

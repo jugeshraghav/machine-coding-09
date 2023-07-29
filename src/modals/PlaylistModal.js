@@ -1,3 +1,4 @@
+import { useData } from "../index";
 import { CgPlayListAdd } from "react-icons/cg";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useState } from "react";
@@ -5,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import { Button, Modal } from "@mui/material";
 
 export const PlaylistModal = () => {
+  const { state } = useData();
   const [showPlaylistModal, setShowPlaylistModal] = useState(false);
   const handleOpen = () => {
     setShowPlaylistModal(true);
@@ -37,8 +39,16 @@ export const PlaylistModal = () => {
         >
           <h1 className="font-bold text-lg text-center">Add Playlist</h1>
 
-          <input placeholder="Playlist Name" className="border p-2" />
-          <input placeholder="Description" className="border p-2" />
+          <input
+            name="name"
+            placeholder="Playlist Name"
+            className="border p-2"
+          />
+          <input
+            name="description"
+            placeholder="Description"
+            className="border p-2"
+          />
           <Button variant="contained" size="small">
             Create New PlayList
           </Button>

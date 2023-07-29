@@ -1,15 +1,17 @@
-import { AiFillDelete } from "react-icons/ai";
-import { AiTwotoneEdit } from "react-icons/ai";
-import { CgPlayListAdd } from "react-icons/cg";
-import { AiFillClockCircle, AiOutlineClockCircle } from "react-icons/ai";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useData } from "../contexts/DataContext";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { AiFillClockCircle, AiOutlineClockCircle } from "react-icons/ai";
 import { SuggesstionVideoCard } from "../components/SuggestionVideoCard";
-import { isInWatchLater } from "../utils/Utils";
 import { NoteModal } from "../modals/NoteModal";
-import { useEffect } from "react";
+import { useData } from "../contexts/DataContext";
+import { isInWatchLater } from "../utils/Utils";
+import { CgPlayListAdd } from "react-icons/cg";
 
 export const VideoDetail = () => {
+  const [showNoteModal, setShowNoteModal] = useState(false);
+  const [from, setFrom] = useState("add");
+  const [noteId, setNoteId] = useState(null);
   const { videoId } = useParams();
   const {
     state,
@@ -17,17 +19,24 @@ export const VideoDetail = () => {
     state: { videos, watchLater, noteTextArr },
     watchLaterHandler,
   } = useData();
+
   const currentVideo = videos?.find(({ _id }) => _id == videoId);
   const remainingVideos = videos?.filter(
     ({ _id }) => _id !== currentVideo?._id
   );
 
   const notesArr = currentVideo?.notes;
-  console.log(notesArr);
 
   const isVideoInWatchLater = isInWatchLater(watchLater, videoId);
 
   //handlers
+  const handleOpen = () => {
+    setShowNoteModal(true);
+  };
+  const handleClose = () => {
+    setShowNoteModal(false);
+  };
+
   const updateNotesInVideosHandler = (videoId) => {
     const updatedArrayWithNotes = state?.videos?.map((video) =>
       video?._id === Number(videoId)
@@ -42,10 +51,17 @@ export const VideoDetail = () => {
   };
 
   const editNotehandler = (noteId, videoId) => {
-    console.log(notesArr);
+    setFrom("edit");
+    setNoteId(noteId);
+    handleOpen();
     const currentNote = notesArr?.find(({ id }) => id === noteId);
     console.log(currentNote?.note);
     dispatch({ type: "SET_NOTE_TEXT", payLoad: currentNote?.note });
+  };
+  const addNoteClick = () => {
+    setFrom("add");
+    setNoteId(null);
+    handleOpen();
   };
   const deleteNotehandler = (noteId, videoId) => {
     dispatch({
@@ -59,12 +75,22 @@ export const VideoDetail = () => {
   }, [noteTextArr]);
   return (
     <>
-      <div className="flex gap-2 ">
-        <div className="w-3/4">
-          <video className="w-full h-96" controls autoPlay loop>
-            <source src={currentVideo?.src} type="video/mp4"></source>
-          </video>
-          <div className="flex justify-between py-4 px-2 border-b-2">
+      <NoteModal
+        from={from}
+        noteId={noteId}
+        show={showNoteModal}
+        handleClose={handleClose}
+        handleOpen={handleOpen}
+      />
+      <div className="md:flex gap-2 sm:mx-auto">
+        <div className="md:w-3/4">
+          <iframe
+            src={currentVideo.src}
+            title={currentVideo.title}
+            allowFullScreen
+            className="w-full  aspect-video mx-auto"
+          ></iframe>
+          <div className="flex justify-between md:py-4 md:px-2 p-1 border-b-2">
             <div className="flex items-center gap-2">
               {" "}
               <img
@@ -72,7 +98,7 @@ export const VideoDetail = () => {
                 alt={currentVideo?.title}
                 className="w-10 h-10 rounded-full"
               />
-              <p className="font-bold text-sm">{currentVideo?.title}</p>
+              <p className="md:font-bold text-sm ">{currentVideo?.title}</p>
             </div>
             <div className=" flex gap-4 items-center text-lg text-blue-500">
               {isVideoInWatchLater ? (
@@ -91,7 +117,10 @@ export const VideoDetail = () => {
                 />
               )}
               <CgPlayListAdd className="cursor-pointer" />
-              <NoteModal />
+              <AiFillEdit
+                onClick={() => addNoteClick()}
+                className="text-lg cursor-pointer"
+              />
             </div>
           </div>
           {/* Notes */}
@@ -101,10 +130,12 @@ export const VideoDetail = () => {
               <div key={id} className="flex justify-between p-2">
                 <p className="font-bold text-sm">{note}</p>
                 <p className="flex gap-4 text-sm">
-                  <NoteModal
+                  <AiFillEdit
                     from="edit"
                     onClick={() => editNotehandler(id, videoId)}
+                    className="text-lg cursor-pointer"
                   />
+
                   <AiFillDelete
                     onClick={() => deleteNotehandler(id, videoId)}
                   />
@@ -113,7 +144,7 @@ export const VideoDetail = () => {
             ))}
           </div>
         </div>
-        <div className="flex flex-col gap-4 w-2/4">
+        <div className="flex flex-col gap-4 md:w-2/4 ">
           {remainingVideos?.map((video) => (
             <SuggesstionVideoCard key={video?._id} videoData={video} />
           ))}

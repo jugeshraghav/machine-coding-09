@@ -6,7 +6,7 @@ export const Playlist = () => {
 
   return (
     <>
-      <div>My PlayList</div>
+      <h1 className="font-bold text-lg">My PlayList</h1>
       <PlaylistModal />
     </>
   );
