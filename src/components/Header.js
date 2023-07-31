@@ -12,14 +12,14 @@ export const Header = () => {
   };
   return (
     <>
-      <div className="flex justify-between px-4 py-1">
+      <div className="flex justify-between px-2 md:px-4 py-4">
         <p className="font-bold text-xl font-serif ">Video</p>
         {location?.pathname === "/explore" && (
           <input
             value={state?.searchText}
             placeholder="Search Videos"
             onChange={(e) => inputHandler(e)}
-            className="border p-1 text-sm w-96 rounded-md"
+            className="border p-1 text-sm md:w-96 sm:48 rounded-md"
           />
         )}
       </div>

@@ -82,7 +82,7 @@ export const VideoDetail = () => {
         handleClose={handleClose}
         handleOpen={handleOpen}
       />
-      <div className="md:flex gap-2 sm:mx-auto">
+      <div className="md:flex gap-2 sm:mx-auto mt-4">
         <div className="md:w-3/4">
           <iframe
             src={currentVideo.src}

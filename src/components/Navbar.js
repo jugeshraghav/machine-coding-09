@@ -7,13 +7,13 @@ import { NavLink } from "react-router-dom";
 export const Navbar = () => {
   return (
     <>
-      <div className=" md:h-full md:w-full p-2 flex md:flex-col sm:justify-around gap-4 p-xl-5">
-        <NavLink to="/" className="flex gap-2 items-center text-xxl md:text-lg">
+      <div className=" md:h-full w-full p-2 flex md:flex-col justify-around gap-4 p-xl-5 bg-slate-100">
+        <NavLink to="/" className="flex gap-2 items-center text-xl md:text-lg">
           <AiFillHome /> <span className="hidden md:block">Home</span>
         </NavLink>
         <NavLink
           to="/explore"
-          className="flex gap-2 items-center text-xxl md:text-lg"
+          className="flex gap-2 items-center text-xl md:text-lg"
         >
           <MdExplore /> <span className="hidden md:block">Explore</span>
         </NavLink>
@@ -23,7 +23,7 @@ export const Navbar = () => {
         </NavLink>
         <NavLink
           to="/playlist"
-          className="flex gap-2 items-center text-xxl md:text-lg"
+          className="flex gap-2 items-center text-xl md:text-lg"
         >
           <CgPlayListAdd /> <span className="hidden md:block">Playlist</span>
         </NavLink>
